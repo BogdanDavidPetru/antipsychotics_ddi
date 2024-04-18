@@ -35,7 +35,7 @@ for index, molecule in enumerate(drug_molecule):
                         print("The smartString is empty for (%s, %s)", db_id_1, db_id_2)
 
 print(len(mcs_set))
-f = open("./common_mcs.txt", "a")
+f = open("common_mcs_antipsychotics.txt", "a")
 
 for mcs in mcs_set:
     f.write(mcs.smartsString + "\n")
