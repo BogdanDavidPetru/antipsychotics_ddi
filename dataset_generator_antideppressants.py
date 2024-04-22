@@ -19,11 +19,10 @@ class Triplets:
 
 # not_researched_drugs = {12867, 12710, 12401, 13256, 13273, 13552, 13665, 13784, 13791, 13841, 13523, 4872, 4888, 8927, 11736, 12093, 12273, 12518, 12958, 13213, 13382, 13403, 13554, 13557, 13676, 372, 11540, 13420, 6077, 9266, 14185, 14651, 16021, 5766, 17056, 12543}
 
-drug_name_file = 'C:/Users/david.bogdan/master/disertatie/anti_deppressants/drug_agent_list_drugbank.txt'
+drug_name_file = './drug-files/info/drug_agent_list_drugbank.txt'
 
 drug_names = set()
 with open(drug_name_file, 'r') as fp:
-    fp.readline()
     for drug in fp:
         drug_names.add(drug.strip())
 

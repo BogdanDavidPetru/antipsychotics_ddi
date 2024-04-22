@@ -1,35 +1,70 @@
+import shutil
+import os
+import pandas as pd
+from rdkit import Chem
 
-nr_list = {12867, 12710, 12401, 13256, 13273, 13552, 13665, 13784, 13791, 13841, 13523, 4872, 4888, 8927, 11736, 12093, 12273, 12518, 12958, 13213, 13382, 13403, 13554, 13557, 13676, 372, 11540, 13420, 6077, 9266, 14185, 14651, 16021, 5766, 17056, 12543}
+smarts = Chem.MolFromSmarts('[#7]-[#6]-[#6]1:[#6]:[#6]:[#6]:[#6]:[#6]:1')
 
-without_interaction = {'DB13665', 'DB00509', 'DB05766', 'DB13557', 'DB13523', 'DB09226', 'DB06077', 'DB13382', 'DB13256', 'DB13784', 'DB04888', 'DB11540', 'DB00372', 'DB12518', 'DB13403', 'DB16021', 'DB13552', 'DB12543', 'DB12093', 'DB12401', 'DB17056', 'DB12273', 'DB11376', 'DB13841', 'DB12693', 'DB14651', 'DB13420', 'DB12710', 'DB13273', 'DB08927', 'DB12867', 'DB12958', 'DB09223', 'DB14185', 'DB04872', 'DB13554', 'DB13213', 'DB13676', 'DB13791'}
+print(smarts)
 
-found = 0
-
-not_found = []
-
-for nr in nr_list:
-    s = str(nr)
-    s_found = False
-    for drug in without_interaction:
-        if drug.__contains__(s):
-            found = found + 1
-            s_found = True
-    if not s_found:
-        not_found.append(s)
-
-print(found)
-print(not_found)
-
-with_info_but_no_interaction =[]
-
-for drug in without_interaction:
-    found = False
-    for nr in nr_list:
-        s = str(nr)
-        if drug.__contains__(s):
-            found = True
-            break
-    if not found:
-        with_info_but_no_interaction.append(drug)
-
-print(with_info_but_no_interaction)
+print(Chem.MolToSmiles(smarts))
+# drug_files_directory = './drug-files/'
+# drug_file_set = set()
+# for drug_file in os.listdir(drug_files_directory):
+#     if drug_file.endswith('.sdf'):
+#         drug_file_set.add(drug_file[:-4])
+#
+# drug_name_file = './info/drug_agent_list_drugbank.txt'
+# #
+# #
+# #
+# # all_drug_files_directory = ('C:/Users/david.bogdan/master/disertatie/example-ddi-dfi-prediction/deepddi/data/DrugBank5'
+# #                             '.0_Approved_drugs')
+# #
+# drug_names = []
+# with open(drug_name_file, 'r') as fp:
+#     for drug in fp:
+#         strip = drug.strip()
+#         if drug_names.__contains__(strip):
+#             print(strip)
+#         drug_names.append(strip)
+#
+# known_ddi_file = ('C:/Users/david.bogdan/master/disertatie/oregano/oregano-master/oregano-master/Integration'
+#                   '/Integration V2.1/DrugBank/interaction_drugs_drugbank.tsv')
+#
+# DDI = pd.read_csv(known_ddi_file, sep="\t", engine="python", names=["subject", "predicate", "object"])
+#
+# DRUGS = {}
+# n = 0
+# identified_ddi = set()
+# for index in range(len(DDI["subject"])):
+#     if n % 100000 == 0:
+#         print(n, " / ", len(DDI["subject"]))
+#     if DDI["predicate"][index] == "is":
+#         if drug_names.__contains__(DDI["object"][index]):
+#             DRUGS[DDI["object"][index]] = DDI["subject"][index]
+#     n += 1
+#
+# for drug_name, drug_id in DRUGS.items():
+#     if not drug_file_set.__contains__(drug_id):
+#         print(drug_name)
+#
+# copied_drug_names = set()
+#
+# for drug_file in os.listdir(all_drug_files_directory):
+#     db_id = drug_file[:-4]
+#     if db_id in DRUGS.values():
+#         drug_name = {i for i in DRUGS if DRUGS[i] == db_id}
+#         copied_drug_names.add(list(drug_name)[0])
+#         full_drug_path = os.path.join(all_drug_files_directory, drug_file)
+#         shutil.copy(full_drug_path, drug_files_directory)
+#
+# print('Copied: ', len(copied_drug_names))
+#
+# not_copied_drug_names = set()
+# for drug in drug_names:
+#     if not copied_drug_names.__contains__(drug):
+#         not_copied_drug_names.add(drug)
+#
+# print('Not Copied: ', len(not_copied_drug_names))
+# print(not_copied_drug_names)
