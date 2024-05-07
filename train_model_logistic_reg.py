@@ -6,15 +6,17 @@ from sklearn.metrics import accuracy_score, multilabel_confusion_matrix, classif
 from sklearn.metrics import hamming_loss
 import joblib
 
-drug_interaction_df = pd.read_csv('drug_interaction_train_test_antidepressants.csv')
+drug_interaction_df = pd.read_csv('drug_interaction_train_test_ablation_20_antidepressants_final.csv')
 
 print("----------Initial Data Frame info-------------")
-drug_interaction_df = drug_interaction_df.iloc[:, 1:]  # remove first column which represents index
+drug_interaction_df = drug_interaction_df.iloc[:, 3:]  # remove first column which represents index
 print(drug_interaction_df.info())
 
 print("----------Input Data Frame info-------------")
 input_drug_interaction_df = drug_interaction_df.iloc[:, :-7]
 print(input_drug_interaction_df.info())
+
+print(input_drug_interaction_df.isnull())
 
 print("----------Output Data Frame info-------------")
 output_drug_interaction_df = drug_interaction_df.iloc[:, -7:]
@@ -49,7 +51,7 @@ multilabel_regression_model.fit(X_tr_arr, y_tr_arr)
 #
 # print('Hamming Loss: ', round(hamming_loss(y_ts_arr, pred), 2))
 
-model_file_name = 'multilabel_logistic_regression_model_newton_balanced.pkl'
+model_file_name = 'multilabel_logistic_regression_model_newton_balanced_ablation_20.pkl'
 #
 print('Finished fitting. Saving trained model to file: ', model_file_name)
 #
