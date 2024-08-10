@@ -16,3 +16,12 @@ Drugs without interaction:  {'Lecozotan', (not annotated)
 Number of drugs taken into consideration for dataset:  271-8( the above) = 263
 Combinari de 263 luate cate 2 => 34453 interactiuni
 din aceste 34453 interactiuni doar 1729 nu interactioneaza in niciun fel
+
+Output count:  interaction
+5.0    20460
+7.0     6495
+1.0     2427
+2.0      524
+6.0      405
+3.0      347
+4.0       30

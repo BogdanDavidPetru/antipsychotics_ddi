@@ -1,6 +1,8 @@
 import pandas as pd
 from sklearn.multioutput import MultiOutputClassifier
-from sklearn.linear_model import LogisticRegression
+# from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, multilabel_confusion_matrix, classification_report
 from sklearn.metrics import hamming_loss
@@ -36,11 +38,30 @@ print('Output test shape: ', y_ts_arr.shape)
 # #train
 #
 #
-multilabel_regression_model = MultiOutputClassifier(LogisticRegression(solver='newton-cg', class_weight='balanced'))
-
+multilabel_dt_model = MultiOutputClassifier(DecisionTreeClassifier(class_weight='balanced', max_depth=100, random_state=42))
 #, max_iter=1000))
 
-multilabel_regression_model.fit(X_tr_arr, y_tr_arr)
+parameters = {
+    'estimator__max_depth': [10, 20, 30, 100, None],
+    'estimator__min_samples_split': [2, 5, 10],
+    'estimator__min_samples_leaf': [1, 2, 4],
+    'estimator__class_weight': ['balanced'],
+    'estimator__max_features': [None, 'sqrt', 'log2']
+}
+
+print("Starting the grid search for the best params")
+
+grid_search = GridSearchCV(multilabel_dt_model, param_grid=parameters, scoring='f1_weighted', cv=5)
+grid_search.fit(X_tr_arr, y_tr_arr)
+
+# Best parameters
+best_params = grid_search.best_params_
+print("Best parameters found: ", best_params)
+
+# Best model
+best_model = grid_search.best_estimator_
+
+# multilabel_dt_model.fit(X_tr_arr, y_tr_arr)
 
 
 # pred = multilabel_regression_model.predict(X_ts_arr)
@@ -49,17 +70,16 @@ multilabel_regression_model.fit(X_tr_arr, y_tr_arr)
 #
 # print('Hamming Loss: ', round(hamming_loss(y_ts_arr, pred), 2))
 
-model_file_name = 'multilabel_logistic_regression_model_newton_balanced.pkl'
+model_file_name = 'multilabel_decision_tree_model_balanced_best_weighted_f1_gridsearch.pkl'
 #
-print('Finished fitting. Saving trained model to file: ', model_file_name)
+# print('Finished fitting. Saving trained model to file: ', model_file_name)
 #
-joblib.dump(multilabel_regression_model, model_file_name)
 
 # multilabel_regression_model = joblib.load(model_file_name)
 
 print('Starting predictions on test data')
 
-pred = multilabel_regression_model.predict(X_ts_arr)
+pred = best_model.predict(X_ts_arr)
 
 print('Accuracy Score from sklearn: ', accuracy_score(y_ts_arr, pred))
 
@@ -95,13 +115,7 @@ report = classification_report(y_ts_arr, pred, output_dict=False,
                                              'Other Interaction'])
 
 print('Report: ', report)
-
-
-
-
-
-
-
+joblib.dump(best_model, model_file_name)
 
 
 # regression_model = LogisticRegression(solver='lbfgs', max_iter=1000)

@@ -20,6 +20,8 @@ for db_id in os.listdir(data_dir):
 common_mcs_file = 'common_mcs_antidepressants.txt'
 common_mcs_dict = {}
 
+f = open("used_mcs_with_index.txt", "w")
+
 with open(common_mcs_file, 'r') as fp:
     fp.readline()
     index = 0
@@ -28,7 +30,9 @@ with open(common_mcs_file, 'r') as fp:
         bonds = mcs_molecule.GetNumBonds()
         if not common_mcs_dict.__contains__(mcs) and bonds > MOLECULE_BOND_THRESHOLD:
             common_mcs_dict[mcs] = index
-            index = index + 1
+            f.write(mcs)
+            index += 1
+f.close()
 
 feature_vector_length = len(common_mcs_dict)
 print('MCS dictionary length: ', feature_vector_length)
@@ -105,6 +109,24 @@ for row_nr, row in enumerate(drug_interaction_file_reader):
             print('Interaction skipped cause sdf file not found: ', drug1, drug2)
     n += 1
 
-train_test_file_name = "drug_interaction_train_test_antidepressants.csv"
+train_test_file_name = "drug_interaction_train_test_antidepressants_ablation_19.csv"
 data.to_csv(train_test_file_name, sep=',', encoding='utf-8')
 print(data.head(10))
+
+
+## To unify different datasets
+
+# train_test_file_name = "drug_interaction_train_test_antidepressants_ablation_first10k_16.csv"
+# train_test_file_name_2 = "drug_interaction_train_test_antidepressants_ablation_first20k_16.csv"
+#
+# drug_interaction_df = pd.read_csv(train_test_file_name)
+# drug_interaction_d2 = pd.read_csv(train_test_file_name)
+#
+# #
+# data_frame_series = pd.concat([drug_interaction_df, drug_interaction_d2])
+# data_frame_series_final = pd.concat([data_frame_series, data])
+#
+# #
+# train_test_file_name_final = "drug_interaction_train_test_ablation_16_antidepressants_final.csv"
+#
+# data_frame_series_final.to_csv(train_test_file_name_final, sep=',', encoding='utf-8')
